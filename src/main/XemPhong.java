@@ -39,6 +39,8 @@ public class XemPhong extends JFrame {
 	 * Create the frame.
 	 */
 	public XemPhong() {
+		
+		new Phong();
 		setTitle("Xem ph\u00F2ng");
 		setBounds(80, 80, 921, 603);
 		contentPane = new JPanel();
