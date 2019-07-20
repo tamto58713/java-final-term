@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.GroupLayout;
@@ -13,12 +14,18 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Font;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class XemPhong extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
-
+	public String choose;
 	/**
 	 * Launch the application.
 	 */
@@ -38,9 +45,18 @@ public class XemPhong extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	public void refresh(JComboBox comboBox) {
+		choose = comboBox.getSelectedItem().toString();
+		System.out.println(choose);
+	}
+	
+	
+	
 	public XemPhong() {
 		
-		new Phong();
+		Data data = new Data();
+		//data.getPhong();
+		//System.out.println(phong.getTen());
 		setTitle("Xem ph\u00F2ng");
 		setBounds(80, 80, 921, 603);
 		contentPane = new JPanel();
@@ -48,8 +64,31 @@ public class XemPhong extends JFrame {
 		setContentPane(contentPane);
 		
 		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(data.getPhong()));
+		choose = comboBox.getSelectedItem().toString();
+		System.out.println(choose);
+		comboBox.addItemListener(new ItemListener() {
+            // Listening if a new items of the combo box has been selected.
+            public void itemStateChanged(ItemEvent event) {
+                JComboBox comboBoxEvent = (JComboBox) event.getSource();
+
+                // The item affected by the event.
+                Object item = event.getItem();
+
+                comboBox.setSelectedItem(event.getItem());
+                
+                if (event.getStateChange() == ItemEvent.SELECTED) {
+                	choose = comboBox.getSelectedItem().toString();
+                	refresh(comboBox);
+                }
+            }
+        });
 		
-		table = new JTable();
+		
+		
+		
+		
+		
 		
 		JButton btnFirst = new JButton("First");
 		btnFirst.setFont(new Font("Times New Roman", Font.BOLD, 20));
@@ -65,35 +104,37 @@ public class XemPhong extends JFrame {
 		
 		JButton btnThot = new JButton("Tho\u00E1t");
 		btnThot.setFont(new Font("Times New Roman", Font.BOLD, 20));
+		
+		JScrollPane scrollPane = new JScrollPane();
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(table, GroupLayout.DEFAULT_SIZE, 877, Short.MAX_VALUE)
-						.addGroup(gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 887, Short.MAX_VALUE)
+						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
 							.addComponent(btnFirst, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
 							.addGap(85)
 							.addComponent(btnPrev, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 784, Short.MAX_VALUE)
 							.addComponent(btnNext, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
 							.addGap(79)
 							.addComponent(btnLast, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
 							.addGap(82)
 							.addComponent(btnThot, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 752, Short.MAX_VALUE)))
+						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 1507, Short.MAX_VALUE)))
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(49)
-					.addComponent(table, GroupLayout.PREFERRED_SIZE, 379, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+					.addGap(36)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 393, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 							.addComponent(btnFirst)
@@ -104,6 +145,40 @@ public class XemPhong extends JFrame {
 							.addComponent(btnLast, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)))
 					.addGap(23))
 		);
+		
+		table = new JTable();
+		table.setCellSelectionEnabled(true);
+		table.setColumnSelectionAllowed(true);
+		table.setEnabled(false);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+		table.setDefaultRenderer(String.class, centerRenderer);
+		table.setDefaultRenderer(Integer.class, centerRenderer);
+		scrollPane.setViewportView(table);
+		
+		String a = "1212";
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{a , "12", "12", "12", Integer.toString(2002), "12", "12", Integer.toString(2), null},
+			},
+			new String[] {
+				"ID  Ph\u00F2ng", "Lo\u1EA1i Ph\u00F2ng", "T\u00EAn Ph\u00F2ng", "Ng\u01B0\u1EDDi Thu\u00EA", "N\u0103m Sinh", "Qu\u00EA Qu\u00E1n", "CM Th\u01B0", "S\u1ED1 Ng\u01B0\u1EDDi", "Wifi"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, String.class, String.class, String.class, Integer.class, String.class, String.class, Integer.class, Boolean.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
+		
+		Phong phong2 = new Phong(choose);
+		System.out.println(phong2.getTen());
+		
+		NguoiThue ngThue = new NguoiThue(phong2.getId_phong());		
+		
+		
 		contentPane.setLayout(gl_contentPane);
 	}
 }
