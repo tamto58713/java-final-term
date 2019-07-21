@@ -47,6 +47,27 @@ public class XemPhong extends JFrame {
 	 */
 	public void refresh(JComboBox comboBox) {
 		choose = comboBox.getSelectedItem().toString();
+		Data data = new Data();
+		data.getData(choose);
+		
+		
+		table.setModel(new DefaultTableModel(
+				new Object[][] {
+					{data.getIdPhong() , data.getLoai(), data.getTenPhong(), data.getTenNguoiThue(), data.getNamSinh() , data.getQueQuan(), data.getCmt(), data.getSoNguoi(), data.isWifi()},
+				},
+				new String[] {
+					"ID  Ph\u00F2ng", "Lo\u1EA1i Ph\u00F2ng", "T\u00EAn Ph\u00F2ng", "Ng\u01B0\u1EDDi Thu\u00EA", "N\u0103m Sinh", "Qu\u00EA Qu\u00E1n", "CM Th\u01B0", "S\u1ED1 Ng\u01B0\u1EDDi", "Wifi"
+				}
+			) {
+				Class[] columnTypes = new Class[] {
+					String.class, String.class, String.class, String.class, Integer.class, String.class, String.class, Integer.class, Boolean.class
+				};
+				public Class getColumnClass(int columnIndex) {
+					return columnTypes[columnIndex];
+				}
+			});
+		
+		
 		System.out.println(choose);
 	}
 	
@@ -173,10 +194,8 @@ public class XemPhong extends JFrame {
 			}
 		});
 		
-		Phong phong2 = new Phong(choose);
-		System.out.println(phong2.getTen());
+;
 		
-		NguoiThue ngThue = new NguoiThue(phong2.getId_phong());		
 		
 		
 		contentPane.setLayout(gl_contentPane);

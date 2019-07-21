@@ -1,6 +1,6 @@
 package main;
 
-import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,13 +75,14 @@ class Phong {
 		Model model = new Model();
 		Bson bsonFilter = Filters.eq("loai", loai);
 		FindIterable<Document> phong = model.getCollectionPhong().find(bsonFilter);
+		System.out.println(phong.first());
 		if (phong.first() != null) {
-			this.id_phong = (String) phong.first().get("id_phong");
-			this.ten = (String) phong.first().get("ten");
-			this.loai = (String) phong.first().get("loai");
+			this.id_phong = phong.first().get("id_phong").toString();
+			this.ten = phong.first().get("ten").toString();
+			this.loai = phong.first().get("loai").toString();
 		}
 	}
-
+ 
 	public String getId_phong() {
 		return id_phong;
 	}
@@ -119,11 +120,12 @@ class NguoiThue {
 	private String id_phong;
 	private String ten;
 	private String queQuan;
-	private String namSinh;
+	private int namSinh;
 	private String cmt;
 	private int soNguoi;
 	private boolean wifi;
 
+	@SuppressWarnings("deprecation")
 	public NguoiThue(String id_phong) {
 		Model model = new Model();
 		Bson bsonFilter = Filters.eq("id_phong", id_phong);
@@ -134,12 +136,16 @@ class NguoiThue {
 
 		if (nguoiThue.first() != null) {
 
-			this.ten = (String) nguoiThue.first().get("ten");
-			this.queQuan = (String) nguoiThue.first().get("loai");
-			this.namSinh = (String) nguoiThue.first().get("namsinh");
-			this.cmt = (String) nguoiThue.first().get("cmt");
-			this.soNguoi = Integer.parseInt((String) nguoiThue.first().get("songuoi"));
-			this.wifi = Boolean.parseBoolean((String) nguoiThue.first().get("wifi"));
+			this.ten = nguoiThue.first().get("ten").toString();
+			this.queQuan = nguoiThue.first().get("quequan").toString();
+			System.out.println(nguoiThue.first().get("namsinh"));
+			
+			
+			this.namSinh = (int) nguoiThue.first().get("namsinh");
+			
+			this.cmt = nguoiThue.first().get("cmt").toString();
+			this.soNguoi = Integer.parseInt(nguoiThue.first().get("songuoi").toString());
+			this.wifi = Boolean.parseBoolean(nguoiThue.first().get("wifi").toString());
 		}
 
 	}
@@ -168,11 +174,11 @@ class NguoiThue {
 		this.queQuan = queQuan;
 	}
 
-	public String getNamSinh() {
+	public int getNamSinh() {
 		return namSinh;
 	}
 
-	public void setNamSinh(String namSinh) {
+	public void setNamSinh(int namSinh) {
 		this.namSinh = namSinh;
 	}
 
@@ -217,8 +223,32 @@ class Data {
 		model = new Model();
 	}
 
-	public void getData() {
-
+	public void getData(String loai) {
+		Phong phong = new Phong(loai);
+		NguoiThue nguoiThue = new NguoiThue(phong.getId_phong());
+		
+		System.out.println(phong.getId_phong());
+		this.idPhong = phong.getId_phong();
+		this.tenPhong = phong.getTen();
+		this.loai = phong.getLoai();
+		this.tenNguoiThue = nguoiThue.getTen();
+		this.queQuan = nguoiThue.getQueQuan();
+		this.namSinh = nguoiThue.getNamSinh();
+		this.cmt = nguoiThue.getCmt();
+		this.soNguoi = nguoiThue.getSoNguoi();
+		this.wifi = nguoiThue.isWifi();
+		
+		System.out.println(this.idPhong + " lhihi");
+		System.out.println(this.getTenPhong());
+		System.out.println(this.getLoai());
+		System.out.println(this.getTenNguoiThue());
+		System.out.println(this.getQueQuan());
+		System.out.println(this.getNamSinh());
+		System.out.println(this.getNamSinh());
+		System.out.println(this.getCmt());
+		System.out.println(this.getSoNguoi());
+		System.out.println(this.isWifi());
+		
 	}
 
 	public String[] getPhong() {
