@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.bson.Document;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
@@ -13,6 +15,7 @@ import java.awt.Font;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextPane;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import javax.swing.JTree;
 import javax.swing.JSpinner;
@@ -20,10 +23,13 @@ import javax.swing.SpinnerListModel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ThemPhong extends JFrame {
 
 	private JPanel contentPane;
+	private Data data;
 
 	/**
 	 * Launch the application.
@@ -44,7 +50,25 @@ public class ThemPhong extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	private boolean checkPhong(String[] listTen, String ten, String loai) {
+		int i = 0;
+		
+		while (i < listTen.length) {
+			
+			if (listTen[i].toLowerCase().equals(ten.toLowerCase())) {
+				Phong phong = new Phong(listTen[i]);
+				if (phong.getLoai().equals(loai))
+					return false;
+			}	
+			i++;
+		}
+		return true;
+		
+	}
+	
 	public ThemPhong() {
+		data = new Data();
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Th\u00EAm ph\u00F2ng");
 		setBounds(100, 100, 620, 354);
 		contentPane = new JPanel();
@@ -57,15 +81,64 @@ public class ThemPhong extends JFrame {
 		JLabel lblNewLabel = new JLabel("Lo\u1EA1i:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JTextPane textPane = new JTextPane();
+		JTextPane txtTen = new JTextPane();
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"VIP001", "VIP002", "MED003", "MED004"}));
+		comboBox.setModel(new DefaultComboBoxModel(data.getListLoaiPhong()));
 		
 		JButton btnNewButton = new JButton("Th\u00EAm");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (txtTen.getText().equals(""))
+					JOptionPane.showMessageDialog(comboBox, "Hãy Nhập Tên Phòng!");
+				else {
+					
+					String loai = comboBox.getSelectedItem().toString();
+					String tenPhong[]= data.getListTenPhong();
+					
+					if (!checkPhong(tenPhong, txtTen.getText(), loai)) {
+						JOptionPane.showMessageDialog(comboBox, "Phòng này đã tồn tại!");
+					}
+					else {
+						data.insertPhong(txtTen.getText(), loai);
+						JOptionPane.showMessageDialog(comboBox, "Đã thêm thành công!");
+						dispose();
+					}
+					
+//					 
+						
+				}
+			}
+		});
 		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		
 		JButton btnNewButton_1 = new JButton("Tho\u00E1t");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int status = JOptionPane.showConfirmDialog(comboBox,  "Bạn có muốn lưu lại phòng này và thoát?");
+				if (status == 0) {
+					if (txtTen.getText().equals(""))
+						JOptionPane.showMessageDialog(comboBox, "Hãy Nhập Tên Phòng!");
+					else {
+						
+						String loai = comboBox.getSelectedItem().toString();
+						String tenPhong[]= data.getListTenPhong();
+						
+						if (!checkPhong(tenPhong, txtTen.getText(), loai)) {
+							JOptionPane.showMessageDialog(comboBox, "Phòng này đã tồn tại!");
+						}
+						else {
+							data.insertPhong(txtTen.getText(), loai);
+							JOptionPane.showMessageDialog(comboBox, "Đã thêm thành công!");
+							
+						}
+					}
+				}
+				else if (status == 1) {
+					dispose();
+				}
+			}
+		});
 		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -82,7 +155,7 @@ public class ThemPhong extends JFrame {
 							.addGap(35)
 							.addComponent(btnNewButton_1))
 						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textPane))
+						.addComponent(txtTen))
 					.addContainerGap(236, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
@@ -91,7 +164,7 @@ public class ThemPhong extends JFrame {
 					.addGap(21)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addComponent(lblTnPhng, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(txtTen, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(41)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNewLabel)
@@ -103,5 +176,6 @@ public class ThemPhong extends JFrame {
 					.addContainerGap(76, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
+		
 	}
 }

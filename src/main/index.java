@@ -18,7 +18,7 @@ import javax.swing.ImageIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class index {
+public class Index {
 
 	private JFrame frmQunLPhng;
 
@@ -29,7 +29,7 @@ public class index {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					index window = new index();
+					Index window = new Index();
 					window.frmQunLPhng.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,8 +41,9 @@ public class index {
 	/**
 	 * Create the application.
 	 */
-	public index() {
+	public Index() {
 		initialize();
+		
 	}
 
 	/**
@@ -52,8 +53,8 @@ public class index {
 		frmQunLPhng = new JFrame();
 		frmQunLPhng.setTitle("Qu\u1EA3n L\u00FD Ph\u00F2ng Tr\u1ECD");
 		frmQunLPhng.setBounds(50, 50, 890, 591);
-		frmQunLPhng.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		frmQunLPhng.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmQunLPhng.setVisible(true);
 		JPanel panel = new JPanel();
 		frmQunLPhng.getContentPane().add(panel, BorderLayout.CENTER);
 		
@@ -98,6 +99,9 @@ public class index {
 			public void mouseClicked(MouseEvent e) {
 				ThemPhong add = new ThemPhong();
 				add.setVisible(true);
+				System.out.println(add.EXIT_ON_CLOSE);
+				
+				
 			}
 		});
 		panel_3.setBackground(new Color(220, 220, 220));
@@ -127,7 +131,7 @@ public class index {
 		lblThmNgiThu.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JLabel label_2 = new JLabel("");
-		label_2.setIcon(new ImageIcon(index.class.getResource("/image/icons8_add_user_64px_1.png")));
+		label_2.setIcon(new ImageIcon(Index.class.getResource("/image/icons8_add_user_64px_1.png")));
 		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
 		gl_panel_4.setHorizontalGroup(
 			gl_panel_4.createParallelGroup(Alignment.LEADING)
@@ -175,7 +179,7 @@ public class index {
 		lblXemPhng.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JLabel label_4 = new JLabel("");
-		label_4.setIcon(new ImageIcon(index.class.getResource("/image/icons8_room_64px_1.png")));
+		label_4.setIcon(new ImageIcon(Index.class.getResource("/image/icons8_room_64px_1.png")));
 		GroupLayout gl_panel_5 = new GroupLayout(panel_5);
 		gl_panel_5.setHorizontalGroup(
 			gl_panel_5.createParallelGroup(Alignment.LEADING)
@@ -226,7 +230,7 @@ public class index {
 		lblPh.setFont(new Font("Yu Gothic UI Semilight", Font.PLAIN, 15));
 		
 		JLabel label_6 = new JLabel("");
-		label_6.setIcon(new ImageIcon(index.class.getResource("/image/icons8_cost_64px.png")));
+		label_6.setIcon(new ImageIcon(Index.class.getResource("/image/icons8_cost_64px.png")));
 		GroupLayout gl_panel_6 = new GroupLayout(panel_6);
 		gl_panel_6.setHorizontalGroup(
 			gl_panel_6.createParallelGroup(Alignment.LEADING)
@@ -277,7 +281,7 @@ public class index {
 		lblDoanhThu.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JLabel label_8 = new JLabel("");
-		label_8.setIcon(new ImageIcon(index.class.getResource("/image/icons8_money_bag_64px.png")));
+		label_8.setIcon(new ImageIcon(Index.class.getResource("/image/icons8_money_bag_64px.png")));
 		GroupLayout gl_panel_7 = new GroupLayout(panel_7);
 		gl_panel_7.setHorizontalGroup(
 			gl_panel_7.createParallelGroup(Alignment.LEADING)
@@ -328,7 +332,7 @@ public class index {
 		lblLinH.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JLabel label_10 = new JLabel("");
-		label_10.setIcon(new ImageIcon(index.class.getResource("/image/icons8_phone_contact_64px.png")));
+		label_10.setIcon(new ImageIcon(Index.class.getResource("/image/icons8_phone_contact_64px.png")));
 		GroupLayout gl_panel_8 = new GroupLayout(panel_8);
 		gl_panel_8.setHorizontalGroup(
 			gl_panel_8.createParallelGroup(Alignment.LEADING)
@@ -389,7 +393,7 @@ public class index {
 		);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(index.class.getResource("/image/icons8_plus_math_64px_4.png")));
+		label.setIcon(new ImageIcon(Index.class.getResource("/image/icons8_plus_math_64px_4.png")));
 		
 		JLabel lblThmPhng = new JLabel("Th\u00EAm Ph\u00F2ng");
 		lblThmPhng.setHorizontalAlignment(SwingConstants.CENTER);

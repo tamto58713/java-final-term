@@ -3,7 +3,10 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.swing.text.StyledEditorKit.BoldAction;
 
@@ -29,6 +32,7 @@ class Model {
 
 		this.collectionPhong = database.getCollection("phong");
 		this.collectionNguoiThue = database.getCollection("nguoithue");
+		System.out.println("---------------------------------------------------------- END \n");
 	}
 
 	public MongoCollection<org.bson.Document> getCollectionPhong() {
@@ -58,6 +62,18 @@ class Model {
 	public void close() {
 		mongo.close();
 	}
+	
+	public void insertPhong(String ten, String loai) {
+		
+		Map<String, Object> phong =  new HashMap< String, Object>(); 
+		phong.put("ten", ten); 
+		phong.put("loai", loai); 
+		
+		
+		
+		Document doc = new Document(phong);
+		this.collectionPhong.insertOne(doc);
+	}
 
 }
 
@@ -71,13 +87,12 @@ class Phong {
 		Model model = new Model();
 	}
 
-	public Phong(String loai) {
+	public Phong(String ten) {
 		Model model = new Model();
-		Bson bsonFilter = Filters.eq("loai", loai);
+		Bson bsonFilter = Filters.eq("ten", ten);
 		FindIterable<Document> phong = model.getCollectionPhong().find(bsonFilter);
-		System.out.println(phong.first());
 		if (phong.first() != null) {
-			this.id_phong = phong.first().get("id_phong").toString();
+			this.id_phong = phong.first().get("_id").toString();
 			this.ten = phong.first().get("ten").toString();
 			this.loai = phong.first().get("loai").toString();
 		}
@@ -114,6 +129,9 @@ class Phong {
 	public void setModel(Model model) {
 		this.model = model;
 	}
+	public void close() {
+		this.model.close();
+	}
 }
 
 class NguoiThue {
@@ -124,25 +142,19 @@ class NguoiThue {
 	private String cmt;
 	private int soNguoi;
 	private boolean wifi;
+	private Model model;
 
 	@SuppressWarnings("deprecation")
 	public NguoiThue(String id_phong) {
-		Model model = new Model();
+		model = new Model();
 		Bson bsonFilter = Filters.eq("id_phong", id_phong);
 		FindIterable<Document> nguoiThue = model.getCollectionNguoiThue().find(bsonFilter);
-		Document hihi = model.getCollectionNguoiThue().find().first();
-
-		// this.id_phong = (String) nguoiThue.first().get("id_phong");
-
+		
 		if (nguoiThue.first() != null) {
 
 			this.ten = nguoiThue.first().get("ten").toString();
 			this.queQuan = nguoiThue.first().get("quequan").toString();
-			System.out.println(nguoiThue.first().get("namsinh"));
-			
-			
 			this.namSinh = (int) nguoiThue.first().get("namsinh");
-			
 			this.cmt = nguoiThue.first().get("cmt").toString();
 			this.soNguoi = Integer.parseInt(nguoiThue.first().get("songuoi").toString());
 			this.wifi = Boolean.parseBoolean(nguoiThue.first().get("wifi").toString());
@@ -205,7 +217,12 @@ class NguoiThue {
 	public void setWifi(boolean wifi) {
 		this.wifi = wifi;
 	}
+	public void close() {
+		this.model.close();
+	}
 }
+
+
 
 class Data {
 	private String idPhong;
@@ -223,11 +240,10 @@ class Data {
 		model = new Model();
 	}
 
-	public void getData(String loai) {
-		Phong phong = new Phong(loai);
+	public void setData(String ten) {
+		Phong phong = new Phong(ten);
 		NguoiThue nguoiThue = new NguoiThue(phong.getId_phong());
-		
-		System.out.println(phong.getId_phong());
+
 		this.idPhong = phong.getId_phong();
 		this.tenPhong = phong.getTen();
 		this.loai = phong.getLoai();
@@ -237,28 +253,18 @@ class Data {
 		this.cmt = nguoiThue.getCmt();
 		this.soNguoi = nguoiThue.getSoNguoi();
 		this.wifi = nguoiThue.isWifi();
-		
-		System.out.println(this.idPhong + " lhihi");
-		System.out.println(this.getTenPhong());
-		System.out.println(this.getLoai());
-		System.out.println(this.getTenNguoiThue());
-		System.out.println(this.getQueQuan());
-		System.out.println(this.getNamSinh());
-		System.out.println(this.getNamSinh());
-		System.out.println(this.getCmt());
-		System.out.println(this.getSoNguoi());
-		System.out.println(this.isWifi());
-		
+		phong.close();
+		nguoiThue.close();
 	}
 
-	public String[] getPhong() {
+	public String[] getListTenPhong() {
 
 		List<String> list = new ArrayList<String>();
 
 		MongoCursor<Document> cursor = model.getCollectionPhong().find().iterator();
 		try {
 			while (cursor.hasNext()) {
-				list.add((String) cursor.next().get("loai"));
+				list.add((String) cursor.next().get("ten"));
 			}
 		} finally {
 			cursor.close();
@@ -268,6 +274,49 @@ class Data {
 		Arrays.parallelSort(a);
 		return a;
 	}
+	
+	public void insertPhong(String ten, String loai) {
+		model.insertPhong(ten, loai);
+	}
+	
+	public void close() {
+		this.model.close();
+	}
+	
+	private boolean distinct(String a[], String b) {
+		int i = 0;
+		while (i < a.length) {
+			if (a[i].equals(b))
+				return false;
+			i++;
+		}
+		
+		return true;
+	}
+	
+	public String[] getListLoaiPhong() {
+
+		List<String> list = new ArrayList<String>();
+
+		MongoCursor<Document> cursor = model.getCollectionPhong().find().iterator();
+		try {
+			while (cursor.hasNext()) {
+				String[] a = list.toArray(new String[0]);
+				String b = (String) cursor.next().get("loai");
+				
+				if (distinct(a, b))
+					list.add(b);
+			}
+		} finally {
+			cursor.close();
+		}
+
+		String[] a = list.toArray(new String[0]);
+		Arrays.parallelSort(a);
+		return a;
+	}
+	
+	
 
 	public String getIdPhong() {
 		return idPhong;

@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -17,14 +19,20 @@ import javax.swing.JComboBox;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRadioButton;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.awt.event.ActionEvent;
 
 public class ThemNguoiThue extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField txtTen;
+	private JTextField txtQueQuan;
+	private JTextField txtCmt;
+	private JTextField txtSoNguoi;
+	private JComboBox cbNamSinh;
+	private JComboBox cbPhong;
 
 	/**
 	 * Launch the application.
@@ -45,6 +53,10 @@ public class ThemNguoiThue extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	public static boolean isNumeric(String strNum) {
+	    return strNum.matches("-?\\d+(\\.\\d+)?");
+	}	
+	
 	public ThemNguoiThue() {
 		setTitle("Th\u00EAm ng\u01B0\u1EDDi thu\u00EA");
 		setBounds(100, 100, 492, 339);
@@ -53,149 +65,124 @@ public class ThemNguoiThue extends JFrame {
 		setContentPane(contentPane);
 		
 		JLabel lblTn = new JLabel("T\u00EAn:");
+		lblTn.setBounds(15, 30, 49, 18);
 		lblTn.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JLabel lblPhngThu = new JLabel("Ph\u00F2ng thu\u00EA:");
+		lblPhngThu.setBounds(15, 175, 110, 18);
 		lblPhngThu.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JLabel lblSNgi = new JLabel("S\u1ED1 ng\u01B0\u1EDDi:");
+		lblSNgi.setBounds(15, 205, 76, 18);
 		lblSNgi.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JLabel lblWifi = new JLabel("Wifi:");
+		lblWifi.setBounds(15, 234, 109, 18);
 		lblWifi.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JButton btnNewButton = new JButton("Th\u00EAm");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (txtTen.getText().equals("") || txtQueQuan.getText().equals("") || txtCmt.getText().equals("") || txtSoNguoi.getText().equals(""))
+					JOptionPane.showMessageDialog(txtCmt, "Vui lòng điền đủ thông tin cần thiết");
+				else {
+					if (!isNumeric(txtCmt.getText()))
+						JOptionPane.showMessageDialog(txtCmt, "Số CMT phải là các chữ số!");
+					else
+					{
+						JOptionPane.showMessageDialog(txtCmt, "ok");
+					}
+				}
+					
+				
+			}
+		});
+		btnNewButton.setBounds(187, 264, 93, 33);
 		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		
 		JLabel lblNmSinh = new JLabel("N\u0103m sinh:");
+		lblNmSinh.setBounds(15, 58, 119, 18);
 		lblNmSinh.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JLabel lblQuQun = new JLabel("Qu\u00EA qu\u00E1n");
+		lblQuQun.setBounds(15, 102, 74, 18);
 		lblQuQun.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JLabel lblNewLabel = new JLabel("Ch\u1EE9ng minh th\u01B0: ");
+		lblNewLabel.setBounds(15, 143, 110, 18);
 		lblNewLabel.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
-		textField = new JTextField();
-		textField.setColumns(10);
+		txtTen = new JTextField();
+		txtTen.setBounds(187, 30, 222, 20);
+		txtTen.setColumns(10);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"2000", "2001", "2002", "2003"}));
+		List<String> list = new ArrayList<String>();
+		for (int i = 1900; i < 2002; i++) {
+			list.add(Integer.toString(i));
+		}
+		String year[] = list.toArray(new String[0]);
+
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
+		cbNamSinh = new JComboBox();
+		cbNamSinh.setBounds(318, 58, 91, 20);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
 		
-		JComboBox comboBox_1 = new JComboBox();
+		cbNamSinh.setModel(new DefaultComboBoxModel(year));
+		cbNamSinh.setSelectedItem("1990");
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
+		txtQueQuan = new JTextField();
+		txtQueQuan.setBounds(187, 102, 222, 20);
+		txtQueQuan.setColumns(10);
 		
-		JRadioButton rdbtnC = new JRadioButton("C\u00F3");
-		rdbtnC.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		txtCmt = new JTextField();
+		txtCmt.setBounds(187, 143, 222, 20);
+		txtCmt.setColumns(10);
 		
-		JRadioButton rdbtnKhng = new JRadioButton("Kh\u00F4ng");
-		rdbtnKhng.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		cbPhong = new JComboBox();
+		cbPhong.setBounds(381, 174, 28, 22);
+		
+		txtSoNguoi = new JTextField();
+		txtSoNguoi.setBounds(187, 203, 222, 20);
+		txtSoNguoi.setColumns(10);
+		
+		JRadioButton wifiY = new JRadioButton("C\u00F3");
+		wifiY.setBounds(184, 230, 111, 27);
+		wifiY.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		
+		JRadioButton wifiN = new JRadioButton("Kh\u00F4ng");
+		wifiN.setBounds(318, 230, 111, 27);
+		wifiN.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		// chọn 1 trong 2
 		ButtonGroup btn_group = new ButtonGroup();
-			btn_group.add(rdbtnC);
-			btn_group.add(rdbtnKhng);
+			btn_group.add(wifiY);
+			btn_group.add(wifiN);
 		
 		JButton btnNewButton_1 = new JButton("Tho\u00E1t");
+		btnNewButton_1.setBounds(318, 264, 91, 33);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD, 20));
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblTn, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
-							.addGap(123)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 222, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 222, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 222, GroupLayout.PREFERRED_SIZE)
-								.addComponent(comboBox_1, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-					.addGap(22))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblQuQun, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(384, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblNewLabel)
-					.addContainerGap(348, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblPhngThu, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
-					.addGap(184))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblNmSinh, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(339, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblWifi, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
-							.addGap(60))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblSNgi, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-							.addPreferredGap(ComponentPlacement.RELATED)))
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 225, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnNewButton)
-								.addComponent(rdbtnC, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
-							.addGap(23)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE)
-								.addComponent(rdbtnKhng, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))))
-					.addGap(44))
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(25)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblTn)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
-					.addGap(8)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNmSinh)
-						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblQuQun)
-						.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNewLabel)
-						.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblPhngThu)
-						.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblSNgi)
-						.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(15)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblWifi)
-						.addComponent(rdbtnKhng)
-						.addComponent(rdbtnC))
-					.addGap(7)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnNewButton)
-						.addComponent(btnNewButton_1)))
-		);
-		contentPane.setLayout(gl_contentPane);
+		contentPane.setLayout(null);
+		contentPane.add(cbNamSinh);
+		contentPane.add(lblTn);
+		contentPane.add(txtQueQuan);
+		contentPane.add(txtTen);
+		contentPane.add(txtCmt);
+		contentPane.add(cbPhong);
+		contentPane.add(lblQuQun);
+		contentPane.add(lblNewLabel);
+		contentPane.add(lblPhngThu);
+		contentPane.add(lblNmSinh);
+		contentPane.add(lblWifi);
+		contentPane.add(lblSNgi);
+		contentPane.add(wifiY);
+		contentPane.add(btnNewButton);
+		contentPane.add(btnNewButton_1);
+		contentPane.add(wifiN);
+		contentPane.add(txtSoNguoi);
 	}
 }

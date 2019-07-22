@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Phi extends JFrame {
 
@@ -68,6 +70,11 @@ public class Phi extends JFrame {
 		phiMt.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		JButton btnNewButton = new JButton("Tho\u00E1t");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
