@@ -74,6 +74,21 @@ class Model {
 		Document doc = new Document(phong);
 		this.collectionPhong.insertOne(doc);
 	}
+	
+	public void insertNguoiThue(String id_phong, String  ten, String namSinh, String queQuan, String cmt, int soNguoi, boolean wifi) {
+		Map<String, Object> nguoiThue =  new HashMap< String, Object>();
+		nguoiThue.put("id_phong", id_phong);
+		nguoiThue.put("ten", ten);
+		nguoiThue.put("namsinh", namSinh);
+		nguoiThue.put("quequan", queQuan);
+		nguoiThue.put("cmt", cmt);
+		nguoiThue.put("songuoi", soNguoi);
+		nguoiThue.put("wifi", wifi);
+		
+		Document doc = new Document(nguoiThue);
+		this.collectionPhong.insertOne(doc);
+		
+	}
 
 }
 
@@ -275,8 +290,49 @@ class Data {
 		return a;
 	}
 	
+	public String[] getListCmt() {
+
+		List<String> list = new ArrayList<String>();
+
+		MongoCursor<Document> cursor = model.getCollectionNguoiThue().find().iterator();
+		try {
+			while (cursor.hasNext()) {
+				list.add((String) cursor.next().get("cmt"));
+			}
+		} finally {
+			cursor.close();
+		}
+
+		String[] a = list.toArray(new String[0]);
+		Arrays.parallelSort(a);
+		return a;
+	}
+	
+	public String[] getNotExistUserListTenPhong() {
+		List<String> list = new ArrayList<String>();
+
+		MongoCursor<Document> cursor = model.getCollectionPhong().find().iterator();
+		try {
+			while (cursor.hasNext()) {
+				String ten = (String) cursor.next().get("ten");
+				Data data = new Data();
+				data.setData(ten);
+				if (data.getTenNguoiThue() == null)
+					list.add(ten);
+			}
+		} finally {
+			cursor.close();
+		}
+		String[] a = list.toArray(new String[0]);
+		Arrays.parallelSort(a);
+		return a;
+	}
 	public void insertPhong(String ten, String loai) {
 		model.insertPhong(ten, loai);
+	}
+	
+	public void insertNguoiThue(String id_phong, String  ten, String namSinh, String queQuan, String cmt, int soNguoi, boolean wifi) {
+		model.insertNguoiThue(id_phong, ten, namSinh, queQuan, cmt, soNguoi, wifi);
 	}
 	
 	public void close() {

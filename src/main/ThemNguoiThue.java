@@ -33,7 +33,8 @@ public class ThemNguoiThue extends JFrame {
 	private JTextField txtSoNguoi;
 	private JComboBox cbNamSinh;
 	private JComboBox cbPhong;
-
+	private Data data;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -57,7 +58,18 @@ public class ThemNguoiThue extends JFrame {
 	    return strNum.matches("-?\\d+(\\.\\d+)?");
 	}	
 	
+	public boolean checkExistNguoiThue(String[] a, String b) {
+		int i = 0;
+		while (i < a.length) {
+			if (a[i].equals(b))
+				return false;
+			i++;
+		}
+		return true;
+	}
+	
 	public ThemNguoiThue() {
+		data = new Data();
 		setTitle("Th\u00EAm ng\u01B0\u1EDDi thu\u00EA");
 		setBounds(100, 100, 492, 339);
 		contentPane = new JPanel();
@@ -81,22 +93,7 @@ public class ThemNguoiThue extends JFrame {
 		lblWifi.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		JButton btnNewButton = new JButton("Th\u00EAm");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (txtTen.getText().equals("") || txtQueQuan.getText().equals("") || txtCmt.getText().equals("") || txtSoNguoi.getText().equals(""))
-					JOptionPane.showMessageDialog(txtCmt, "Vui lòng điền đủ thông tin cần thiết");
-				else {
-					if (!isNumeric(txtCmt.getText()))
-						JOptionPane.showMessageDialog(txtCmt, "Số CMT phải là các chữ số!");
-					else
-					{
-						JOptionPane.showMessageDialog(txtCmt, "ok");
-					}
-				}
-					
-				
-			}
-		});
+		
 		btnNewButton.setBounds(187, 264, 93, 33);
 		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		
@@ -139,7 +136,8 @@ public class ThemNguoiThue extends JFrame {
 		txtCmt.setColumns(10);
 		
 		cbPhong = new JComboBox();
-		cbPhong.setBounds(381, 174, 28, 22);
+		cbPhong.setModel(new DefaultComboBoxModel(data.getNotExistUserListTenPhong()));
+		cbPhong.setBounds(284, 174, 125, 22);
 		
 		txtSoNguoi = new JTextField();
 		txtSoNguoi.setBounds(187, 203, 222, 20);
@@ -148,10 +146,13 @@ public class ThemNguoiThue extends JFrame {
 		JRadioButton wifiY = new JRadioButton("C\u00F3");
 		wifiY.setBounds(184, 230, 111, 27);
 		wifiY.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		wifiY.setActionCommand("1");
 		
 		JRadioButton wifiN = new JRadioButton("Kh\u00F4ng");
-		wifiN.setBounds(318, 230, 111, 27);
+		wifiN.setBounds(318, 230, 91, 27);
 		wifiN.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		wifiN.setSelected(true);
+		wifiN.setActionCommand("0");
 		
 		// chọn 1 trong 2
 		ButtonGroup btn_group = new ButtonGroup();
@@ -166,6 +167,59 @@ public class ThemNguoiThue extends JFrame {
 			}
 		});
 		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD, 20));
+
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean flag = true;
+				if (txtTen.getText().equals("") || txtQueQuan.getText().equals("") || txtCmt.getText().equals("") || txtSoNguoi.getText().equals("")) {
+					JOptionPane.showMessageDialog(txtCmt, "Vui lòng điền đủ thông tin cần thiết");
+					flag = false;
+				}
+				else {
+					
+					if (!isNumeric(txtCmt.getText())) {
+						JOptionPane.showMessageDialog(txtCmt, "Số CMT phải là các chữ số!"); 
+						flag = false;
+					}
+					else if (txtCmt.getText().length() != 12 && txtCmt.getText().length() != 9) {
+						// Dùng toán rời rạc để phân tích điều kiện
+						// (n == 9 || n == 12)
+						// !(n == 9 || n == 12) = (n != 9 && n != 12)
+						JOptionPane.showMessageDialog(txtCmt, "Số CMT phải có 9 hoặc 12 chữ số!"); 
+						flag = false;
+					}
+					
+					if (!isNumeric(txtSoNguoi.getText())) {
+						JOptionPane.showMessageDialog(txtCmt, "Số người phải là số tự nhiên!");
+						flag = false;
+					}
+					else if ((Integer.parseInt(txtSoNguoi.getText()) < 1) || (Integer.parseInt(txtSoNguoi.getText()) > 5)) {
+						JOptionPane.showMessageDialog(txtCmt, "phòng chỉ chứa được từ 1 - 5 người!"); 
+						flag = false;
+						
+					}
+					
+					if (flag)
+					{
+						String[] a = data.getListCmt();
+						if (checkExistNguoiThue(a, txtCmt.getText())) {
+							boolean wifi = false;
+							if (btn_group.getSelection().getActionCommand() == "1")
+								wifi = true;
+							data.insertNguoiThue(data.getIdPhong(), txtTen.getText(), cbNamSinh.getSelectedItem().toString(), txtQueQuan.getText(), txtCmt.getText(), Integer.parseInt(txtSoNguoi.getText()), wifi);
+							
+						}
+						else {
+							JOptionPane.showMessageDialog(txtCmt, "Không được trùng số CMT!");
+						}
+							
+					}
+				}
+					
+				
+			}
+		});
 		contentPane.setLayout(null);
 		contentPane.add(cbNamSinh);
 		contentPane.add(lblTn);
