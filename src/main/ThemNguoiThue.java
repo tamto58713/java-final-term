@@ -207,8 +207,10 @@ public class ThemNguoiThue extends JFrame {
 							boolean wifi = false;
 							if (btn_group.getSelection().getActionCommand() == "1")
 								wifi = true;
+							data.setData(cbPhong.getSelectedItem().toString());
 							data.insertNguoiThue(data.getIdPhong(), txtTen.getText(), cbNamSinh.getSelectedItem().toString(), txtQueQuan.getText(), txtCmt.getText(), Integer.parseInt(txtSoNguoi.getText()), wifi);
-							
+							JOptionPane.showMessageDialog(txtCmt, "Thêm thành công!");
+							dispose();
 						}
 						else {
 							JOptionPane.showMessageDialog(txtCmt, "Không được trùng số CMT!");

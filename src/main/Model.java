@@ -86,7 +86,7 @@ class Model {
 		nguoiThue.put("wifi", wifi);
 		
 		Document doc = new Document(nguoiThue);
-		this.collectionPhong.insertOne(doc);
+		this.collectionNguoiThue.insertOne(doc);
 		
 	}
 
@@ -153,7 +153,7 @@ class NguoiThue {
 	private String id_phong;
 	private String ten;
 	private String queQuan;
-	private int namSinh;
+	private String namSinh;
 	private String cmt;
 	private int soNguoi;
 	private boolean wifi;
@@ -169,7 +169,7 @@ class NguoiThue {
 
 			this.ten = nguoiThue.first().get("ten").toString();
 			this.queQuan = nguoiThue.first().get("quequan").toString();
-			this.namSinh = (int) nguoiThue.first().get("namsinh");
+			this.namSinh =  nguoiThue.first().get("namsinh").toString();
 			this.cmt = nguoiThue.first().get("cmt").toString();
 			this.soNguoi = Integer.parseInt(nguoiThue.first().get("songuoi").toString());
 			this.wifi = Boolean.parseBoolean(nguoiThue.first().get("wifi").toString());
@@ -201,11 +201,11 @@ class NguoiThue {
 		this.queQuan = queQuan;
 	}
 
-	public int getNamSinh() {
+	public String getNamSinh() {
 		return namSinh;
 	}
 
-	public void setNamSinh(int namSinh) {
+	public void setNamSinh(String namSinh) {
 		this.namSinh = namSinh;
 	}
 
@@ -245,7 +245,7 @@ class Data {
 	private String loai;
 	private String tenNguoiThue;
 	private String queQuan;
-	private int namSinh;
+	private String namSinh;
 	private String cmt;
 	private int soNguoi;
 	private boolean wifi;
@@ -414,11 +414,11 @@ class Data {
 		this.queQuan = queQuan;
 	}
 
-	public int getNamSinh() {
+	public String getNamSinh() {
 		return namSinh;
 	}
 
-	public void setNamSinh(int namSinh) {
+	public void setNamSinh(String namSinh) {
 		this.namSinh = namSinh;
 	}
 
