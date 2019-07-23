@@ -1,21 +1,3 @@
-Skip to content
- 
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@tamto58713 
-0
-0 0 tamto58713/java-final-term
- Code  Issues 0  Pull requests 0  Projects 0  Wiki  Security  Insights  Settings
-java-final-term/src/main/XemPhong.java
-@tamto58713 tamto58713 adding add room
-ac7b380 22 hours ago
-199 lines (171 sloc)  7.3 KB
-    
 package main;
 
 import java.awt.BorderLayout;
@@ -43,14 +25,16 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class XemPhong extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
 	public String choose;
 	private Data data;
 	private JComboBox comboBox;
+	private JTable table;
+	private JScrollPane scrollPane;
 	/**
 	 * Launch the application.
 	 */
@@ -74,25 +58,56 @@ public class XemPhong extends JFrame {
 	public void refresh(JComboBox comboBox) {
 		System.out.println(choose);
 		data.setData(choose);
-		setModelComboBox();
+		setTableModel();
+	}
+	
+	public void setTableModel() {
+		
+		String columnNames[] = {
+		"ID  Ph\u00F2ng", "Lo\u1EA1i Ph\u00F2ng", "T\u00EAn Ph\u00F2ng", "Ng\u01B0\u1EDDi Thu\u00EA", "N\u0103m Sinh", 
+		"Qu\u00EA Qu\u00E1n", "CM Th\u01B0", "S\u1ED1 Ng\u01B0\u1EDDi", "Wifi"};
+		String wifi;
+		if (data.isWifi())
+			wifi = "Có";
+		else 
+			wifi = "Không";
+		String[][] rows = {
+				{data.getIdPhong(), data.getLoai(), data.getTenPhong(), data.getTenNguoiThue(), data.getNamSinh(), 
+					data.getQueQuan(), data.getCmt(), Integer.toString(data.getSoNguoi()), wifi},
+			};
+		
+		table = new JTable(rows, columnNames);
+		table.setSurrendersFocusOnKeystroke(true);
+		table.setColumnSelectionAllowed(true);
+		table.setCellSelectionEnabled(true);
+		table.setBounds(100, 100, 300, 400);
+		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+		table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
+		table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+		table.getColumnModel().getColumn(2).setCellRenderer( centerRenderer );
+		table.getColumnModel().getColumn(3).setCellRenderer( centerRenderer );
+		table.getColumnModel().getColumn(4).setCellRenderer( centerRenderer );
+		table.getColumnModel().getColumn(5).setCellRenderer( centerRenderer );
+		table.getColumnModel().getColumn(6).setCellRenderer( centerRenderer );
+		table.getColumnModel().getColumn(7).setCellRenderer( centerRenderer );
+		table.getColumnModel().getColumn(8).setCellRenderer( centerRenderer );
+		
+		table.getColumnModel().getColumn(0).setPreferredWidth(160);
+		table.getColumnModel().getColumn(1).setPreferredWidth(80);
+		table.getColumnModel().getColumn(2).setPreferredWidth(150);
+		table.getColumnModel().getColumn(3).setPreferredWidth(150);
+		table.getColumnModel().getColumn(4).setPreferredWidth(60);
+		table.getColumnModel().getColumn(5).setPreferredWidth(80);
+		table.getColumnModel().getColumn(6).setPreferredWidth(60);
+		table.getColumnModel().getColumn(7).setPreferredWidth(50);
+		table.getColumnModel().getColumn(8).setPreferredWidth(30);
+		scrollPane.setViewportView(table);
+		
 	}
 	
 	public void setModelComboBox() {
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{data.getIdPhong(), data.getLoai(), data.getTenPhong(), data.getTenNguoiThue(), data.getNamSinh(), data.getQueQuan(), data.getCmt(), data.getSoNguoi(), data.isWifi()},
-			},
-			new String[] {
-				"ID  Ph\u00F2ng", "Lo\u1EA1i Ph\u00F2ng", "T\u00EAn Ph\u00F2ng", "Ng\u01B0\u1EDDi Thu\u00EA", "N\u0103m Sinh", "Qu\u00EA Qu\u00E1n", "CM Th\u01B0", "S\u1ED1 Ng\u01B0\u1EDDi", "Wifi"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class, String.class, Integer.class, String.class, String.class, Integer.class, Boolean.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
 	}
 	public void setting() {
 		
@@ -100,7 +115,7 @@ public class XemPhong extends JFrame {
 		choose = comboBox.getSelectedItem().toString();
 		data.setData(choose);
 		choose = comboBox.getSelectedItem().toString();
-		setModelComboBox();
+		setTableModel();
 		comboBox.addItemListener(new ItemListener() {
             // Listening if a new items of the combo box has been selected.
             public void itemStateChanged(ItemEvent event) {
@@ -134,20 +149,52 @@ public class XemPhong extends JFrame {
 		setContentPane(contentPane);
 		
 		comboBox = new JComboBox();
+		comboBox.setBounds(10, 32, 154, 31);
 		
 		JButton btnFirst = new JButton("First");
+		btnFirst.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				comboBox.setSelectedIndex(0);
+			}
+		});
+		btnFirst.setBounds(10, 505, 105, 33);
 		btnFirst.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		
 		JButton btnPrev = new JButton("Prev");
+		btnPrev.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = comboBox.getSelectedIndex();
+				if (index > 0) {
+					comboBox.setSelectedIndex(index - 1);
+				}
+			}
+		});
+		btnPrev.setBounds(158, 505, 112, 33);
 		btnPrev.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		
 		JButton btnNext = new JButton("Next");
+		btnNext.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = comboBox.getSelectedIndex();
+				if (index < comboBox.getItemCount() - 1) {
+					comboBox.setSelectedIndex(index + 1);
+				}
+			}
+		});
+		btnNext.setBounds(313, 505, 107, 33);
 		btnNext.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		
 		JButton btnLast = new JButton("Last");
+		btnLast.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				comboBox.setSelectedIndex(comboBox.getItemCount() - 1);
+			}
+		});
+		btnLast.setBounds(462, 505, 112, 33);
 		btnLast.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		
 		JButton btnThot = new JButton("Tho\u00E1t");
+		btnThot.setBounds(791, 505, 106, 33);
 		btnThot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -155,63 +202,23 @@ public class XemPhong extends JFrame {
 		});
 		btnThot.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 89, 887, 201);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 887, Short.MAX_VALUE)
-						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-							.addComponent(btnFirst, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-							.addGap(85)
-							.addComponent(btnPrev, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 784, Short.MAX_VALUE)
-							.addComponent(btnNext, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
-							.addGap(79)
-							.addComponent(btnLast, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
-							.addGap(82)
-							.addComponent(btnThot, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
-						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 1507, Short.MAX_VALUE)))
-					.addContainerGap())
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-					.addGap(36)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 393, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-							.addComponent(btnFirst)
-							.addComponent(btnPrev, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-							.addComponent(btnThot, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnNext, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnLast, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)))
-					.addGap(23))
-		);
-		
-		table = new JTable();
-		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		table.setSurrendersFocusOnKeystroke(true);
-		table.setCellSelectionEnabled(true);
-		table.setColumnSelectionAllowed(true);
 		
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-		table.setDefaultRenderer(String.class, centerRenderer);
-		table.setDefaultRenderer(Integer.class, centerRenderer);
-		scrollPane.setViewportView(table);
 		
 		data = new Data();
 		setting();
-		contentPane.setLayout(gl_contentPane);
+		contentPane.setLayout(null);
+		contentPane.add(scrollPane);
+		contentPane.add(btnFirst);
+		contentPane.add(btnPrev);
+		contentPane.add(btnNext);
+		contentPane.add(btnLast);
+		contentPane.add(btnThot);
+		contentPane.add(comboBox);
 	}
 }
 
